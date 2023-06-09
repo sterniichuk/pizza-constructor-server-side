@@ -1,4 +1,4 @@
-package com.pizzacalculator.pizzacalculatorserverside.service;
+package com.pizzacalculator.pizzacalculatorserverside.bussiness.service;
 
 
 import lombok.AllArgsConstructor;

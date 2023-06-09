@@ -1,4 +1,4 @@
-package com.pizzacalculator.pizzacalculatorserverside.model;
+package com.pizzacalculator.pizzacalculatorserverside.bussiness.model.dto;
 
 import java.util.List;
 
