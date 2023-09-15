@@ -2,9 +2,7 @@ package com.pizzacalculator.pizzacalculatorserverside.bussiness.service;
 
 import com.pizzacalculator.pizzacalculatorserverside.bussiness.model.dto.*;
 import com.pizzacalculator.pizzacalculatorserverside.bussiness.model.entity.OrderEntity;
-import com.pizzacalculator.pizzacalculatorserverside.bussiness.repository.OrderDetailsRepository;
 import com.pizzacalculator.pizzacalculatorserverside.bussiness.repository.OrderEntityRepository;
-import com.pizzacalculator.pizzacalculatorserverside.bussiness.repository.ToppingRepository;
 import com.pizzacalculator.pizzacalculatorserverside.security.exception.IllegalOperationException;
 import com.pizzacalculator.pizzacalculatorserverside.security.exception.NotFoundException;
 import com.pizzacalculator.pizzacalculatorserverside.security.model.User;
@@ -26,10 +24,8 @@ import java.util.logging.Logger;
 public class CartService {
     Logger logger = Logger.getLogger(this.getClass().toString());
     public final OrderService service;
-    private final ToppingRepository repository;
     private final UserRepository userRepository;
     private final OrderEntityRepository orderEntityRepository;
-    private final OrderDetailsRepository orderDetailsRepository;
     private final KitchenService kitchen;
 
     public CartResponse getCart(Long clientId) {
@@ -138,7 +134,7 @@ public class CartService {
             x.setState(OrderState.COOKING);
         });
         orderEntityRepository.saveAll(listToKitchen);
-        kitchen.submitTasks(user.getId(),listToKitchen, delivery);
+        kitchen.submitTasks(user.getId(), listToKitchen, delivery);
         return new CartResponse(BigDecimal.ZERO, notFinishedOrdersFromEntity(orders));
     }
 

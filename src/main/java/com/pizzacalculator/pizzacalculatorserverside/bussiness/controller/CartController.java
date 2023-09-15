@@ -3,8 +3,6 @@ package com.pizzacalculator.pizzacalculatorserverside.bussiness.controller;
 import com.pizzacalculator.pizzacalculatorserverside.bussiness.model.dto.*;
 import com.pizzacalculator.pizzacalculatorserverside.bussiness.service.CartService;
 import com.pizzacalculator.pizzacalculatorserverside.security.model.User;
-import com.pizzacalculator.pizzacalculatorserverside.security.service.SecurityMockService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +73,7 @@ public class CartController {
     }
 
     @PutMapping("/checkout/carryout")
-    public ResponseEntity<CartResponse> checkoutCarryOut(HttpServletRequest request) {
+    public ResponseEntity<CartResponse> checkoutCarryOut() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User principal = (User) authentication.getPrincipal();
         var clientId = principal.getId();
@@ -86,7 +84,7 @@ public class CartController {
     }
 
     @GetMapping("/check-status")
-    public ResponseEntity<TimeToWaitResponse> checkStatus(HttpServletRequest request) {
+    public ResponseEntity<TimeToWaitResponse> checkStatus() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User principal = (User) authentication.getPrincipal();
         var clientId = principal.getId();
