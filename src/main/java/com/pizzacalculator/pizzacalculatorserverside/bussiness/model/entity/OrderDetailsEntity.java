@@ -43,6 +43,14 @@ public class OrderDetailsEntity {
     @ToString.Exclude
     List<ToppingCounter> toppings = new ArrayList<>(0);
 
+    public static OrderDetailsEntity getDefault(){
+        return OrderDetailsEntity.builder()
+                .size(ToppingEntity.builder().build())
+                .toppings(List.of())
+                .dough(ToppingEntity.builder().build())
+                .build();
+    }
+
     public OrderDetails getDTO() {
         return OrderDetails.builder()
                 .dough(dough.getName())
