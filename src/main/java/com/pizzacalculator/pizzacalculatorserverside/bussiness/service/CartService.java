@@ -44,7 +44,7 @@ public class CartService {
                 .toList();
     }
 
-    private BigDecimal getSum(List<OrderInCart> orderRequests) {
+    private BigDecimal sum(List<OrderInCart> orderRequests) {
         if (orderRequests.isEmpty()) {
             return BigDecimal.ZERO;
         }
@@ -85,7 +85,7 @@ public class CartService {
     @NotNull
     private CartResponse getCartResponse(List<OrderEntity> orders) {
         List<OrderInCart> dtoOrders = notFinishedOrdersFromEntity(orders);
-        CartResponse cartResponse = new CartResponse(getSum(dtoOrders), dtoOrders);
+        CartResponse cartResponse = new CartResponse(sum(dtoOrders), dtoOrders);
         logger.info(cartResponse.toString());
         return cartResponse;
     }
@@ -108,21 +108,23 @@ public class CartService {
         return getCartResponse(orders);
     }
 
-    public CalculateWithDeliveryResponse calculateDelivery(Long clientId, Address address) {
+    public TotalPrice calculateDelivery(Long clientId, Address address) {
         var user = getUser(clientId);
-        BigDecimal sum = getSum(notFinishedOrdersFromEntity(user.getOrders()));
+        BigDecimal sum = sum(notFinishedOrdersFromEntity(user.getOrders()));
         return calculateDeliveryResponse(address, sum);
     }
 
-    private static CalculateWithDeliveryResponse calculateDeliveryResponse(Address address, BigDecimal sum) {
-        BigDecimal deliveryCoeff;
-        if (address.city().toLowerCase().contains("rivne")) {
-            deliveryCoeff = BigDecimal.valueOf(0.05);
-        } else {
-            deliveryCoeff = BigDecimal.valueOf(0.15);
-        }
-        BigDecimal delivery = sum.multiply(deliveryCoeff).setScale(2, RoundingMode.HALF_UP);
-        return new CalculateWithDeliveryResponse(sum, sum.add(delivery));
+    private static final String homeCity = "rivne";
+    private static final BigDecimal deliveryCoeffForHome = BigDecimal.valueOf(0.05);
+    private static final BigDecimal deliveryCoeffForOtherCities = BigDecimal.valueOf(0.15);
+    private static final int MONEY_SCALE = 2;
+    private static final RoundingMode MONEY_ROUNDING_MODE = RoundingMode.HALF_UP;
+
+    private static TotalPrice calculateDeliveryResponse(Address address, BigDecimal sum) {
+        final BigDecimal deliveryCoeff = address.city().toLowerCase()
+                .contains(homeCity) ? deliveryCoeffForHome : deliveryCoeffForOtherCities;
+        BigDecimal delivery = sum.multiply(deliveryCoeff).setScale(MONEY_SCALE, MONEY_ROUNDING_MODE);
+        return new TotalPrice(sum, sum.add(delivery));
     }
 
     public CartResponse checkoutWithDelivery(Long clientId, boolean delivery) {

@@ -30,11 +30,11 @@ public class CartController {
     }
 
     @PutMapping("/calculate-with-delivery")
-    public ResponseEntity<CalculateWithDeliveryResponse> calculateDelivery(@RequestBody Address address) {
+    public ResponseEntity<TotalPrice> calculateDelivery(@RequestBody Address address) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User principal = (User) authentication.getPrincipal();
         var clientId = principal.getId();
-        CalculateWithDeliveryResponse response = service.calculateDelivery(clientId, address);
+        TotalPrice response = service.calculateDelivery(clientId, address);
         logger.info(response.toString());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
