@@ -9,10 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import static com.pizzacalculator.pizzacalculatorserverside.bussiness.service.OrderService.map;
 import static com.pizzacalculator.pizzacalculatorserverside.security.service.UserService.phoneToUser;
 import static com.pizzacalculator.pizzacalculatorserverside.security.service.UserService.tokenToUser;
 
@@ -39,18 +37,12 @@ public class AuthenticationServiceImpl {
                 .build();
         repository.save(user);
         logger.info("saved: " + user);
-        //
         var id = user.getId();
         UserTempData value = new UserTempData(id, request);
         phoneToUser.put(user.getPhone(), value);
-        map.put(id, new ArrayList<>());
-        //
         String jwtToken = jwtService.generateToken(user);
         logger.info("jwtToken: " + jwtToken);
-
-        //
         tokenToUser.put(jwtToken, value);
-        //
         return AuthResponse.builder()
                 .token(jwtToken)
                 .build();

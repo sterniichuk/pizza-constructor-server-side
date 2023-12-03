@@ -32,6 +32,10 @@ public class ToppingCounter {
         amount++;
     }
 
+    public void increment(ToppingCounter toppingCounter){
+        toppingCounter.increment();
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private ToppingEntity topping;
